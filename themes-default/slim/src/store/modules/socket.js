@@ -1,3 +1,4 @@
+import { displayNotification } from '../../notifications';
 import {
     SOCKET_ONOPEN,
     SOCKET_ONCLOSE,
@@ -55,7 +56,7 @@ const mutations = {
         error += 'Please check your network connection. ';
         error += 'If you are using a reverse proxy, please take a look at our wiki for config examples.';
 
-        window.displayNotification('notice', title, error);
+        displayNotification('notice', title, error);
     }
 };
 

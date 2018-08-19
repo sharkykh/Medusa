@@ -230,7 +230,6 @@ window.app = new Vue({
 </script>
 </%block>
 <%block name="content">
-<vue-snotify></vue-snotify>
 <input type="hidden" id="indexer-name" value="${show.indexer_name}" />
 <input type="hidden" id="series-id" value="${show.indexerid}" />
 <input type="hidden" id="series-slug" value="${show.slug}" />

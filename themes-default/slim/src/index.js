@@ -17,6 +17,7 @@ import { ToggleButton } from 'vue-js-toggle-button';
 import Snotify from 'vue-snotify';
 import axios from 'axios';
 import debounce from 'lodash/debounce';
+import { displayNotification } from './notifications';
 import store from './store';
 import router from './router';
 import { isDevelopment } from './utils';
@@ -65,6 +66,7 @@ if (window) {
     window.Snotify = Snotify;
     window.axios = axios;
     window._ = { debounce };
+    window.displayNotification = displayNotification;
     window.store = store;
     window.router = router;
     window.apiRoute = apiRoute;

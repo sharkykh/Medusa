@@ -53,6 +53,8 @@
     <body ${('', attributes)[bool(loggedIn)]} web-root="${app.WEB_ROOT}">
         <div id="vue-wrap" class="container-fluid">
 
+          <vue-snotify></vue-snotify>
+
           <div v-if="globalLoading" class="text-center">
               <h3>Loading&hellip;</h3>
               If this is taking too long,<br>
@@ -106,7 +108,6 @@
 
         <script type="text/javascript" src="js/browser.js?${sbPID}"></script>
 
-        <script type="text/javascript" src="js/notifications.js?${sbPID}"></script>
         <script>
             // Used to get username to the app.js and header
             % if app.WEB_USERNAME and app.WEB_PASSWORD and '/login' not in full_url:

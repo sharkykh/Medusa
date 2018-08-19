@@ -94,7 +94,7 @@ const webpackConfig = (env, mode) => ({
             cacheGroups: {
                 runtime: {
                     name: 'medusa-runtime',
-                    test: /[\\/]src[\\/]/,
+                    test: /[\\/](src|static)[\\/]/,
                     minChunks: 2,
                     priority: 0,
                     reuseExistingChunk: true
@@ -167,6 +167,13 @@ const webpackConfig = (env, mode) => ({
                         outputPath: 'fonts'
                     }
                 }]
+            },
+            {
+                test: /\.(png|jpe?g|gif)$/,
+                loader: 'url-loader',
+                issuer: [
+                    path.resolve(__dirname, 'src/notifications.js')
+                ]
             }
         ]
     },

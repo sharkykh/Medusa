@@ -497,7 +497,6 @@ window.app = new Vue({
 </script>
 </%block>
 <%block name="content">
-<vue-snotify></vue-snotify>
 <h1 class="header">{{ $route.meta.header }}</h1>
 <div class="newShowPortal">
     <div id="config-components">

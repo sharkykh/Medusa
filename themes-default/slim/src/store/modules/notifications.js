@@ -1,3 +1,4 @@
+import { displayNotification } from '../../notifications';
 import { NOTIFICATIONS_ENABLED, NOTIFICATIONS_DISABLED } from '../mutation-types';
 
 const state = {
@@ -25,7 +26,12 @@ const actions = {
         commit(NOTIFICATIONS_DISABLED);
     },
     test() {
-        return window.displayNotification('error', 'test', 'test<br><i class="test-class">hello <b>world</b></i><ul><li>item 1</li><li>item 2</li></ul>', 'notification-test');
+        displayNotification(
+            'error',
+            'test',
+            'test<br><i class="test-class">hello <b>world</b></i><ul><li>item 1</li><li>item 2</li></ul>',
+            'notification-test'
+        );
     }
 };
 

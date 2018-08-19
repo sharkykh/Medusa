@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import VueNativeSock from 'vue-native-websocket';
+import { displayNotification } from '../notifications';
 import {
     auth,
     clients,
@@ -61,12 +62,12 @@ const passToStoreHandler = function(eventName, event, next) {
         // Show the notification to the user
         if (event === 'notification') {
             const { body, hash, type, title } = data;
-            window.displayNotification(type, title, body, hash);
+            displayNotification(type, title, body, hash);
         } else if (event === 'configUpdated') {
             const { section, config } = data;
             this.store.dispatch('updateConfig', { section, config });
         } else {
-            window.displayNotification('info', event, data);
+            displayNotification('info', event, data);
         }
     }
 

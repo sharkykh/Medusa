@@ -24,11 +24,12 @@ $(document).ready(() => {
         $.get('config/general/saveAddShowDefaults', data);
 
         $(event.currentTarget).prop('disabled', true);
-        new PNotify({ // eslint-disable-line no-new
-            title: 'Saved Defaults',
-            text: 'Your "add show" defaults have been set to your current selections.',
-            shadow: false
-        });
+        window.displayNotification(
+            'info',
+            'Saved Defaults',
+            'Your "add show" defaults have been set to your current selections.',
+            null
+        );
     });
 
     $(document.body).on('change', '#statusSelect, select[name="quality_preset"], #season_folders, select[name="allowed_qualities"], select[name="preferred_qualities"], #subtitles, #scene, #anime, #statusSelectAfter', () => {
