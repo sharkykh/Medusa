@@ -1,0 +1,47 @@
+version: 2.1
+workflows:
+  version: 2
+  test:
+    jobs:
+      # TODO: "Check version" stage
+      - Frontend
+      # - Backend tests (py2.7)
+jobs:
+  Frontend:
+    docker:
+      - image: circleci/node:10.16.0
+    working_directory: ~/Medusa/themes-default/slim
+    steps:
+      - checkout:
+          path: ~/Medusa
+      - restore_cache:
+          name: Restore Yarn Package Cache
+          keys:
+            - yarn-packages-{{ checksum "yarn.lock" }}
+      - run:
+          name: yarn install
+          command: yarn install --frozen-lockfile --ignore-scripts
+      - run:
+          name: build-themes-check.sh
+          command: |
+            chmod +x ~/Medusa/.circleci/build-themes-check.sh
+            ~/Medusa/.circleci/build-themes-check.sh
+      - run: yarn lint
+      - run: yarn lint-css
+      - run:
+          name: Run tests
+          command: yarn test --maxWorkers=2
+      # - run:
+      #     name: Upload test coverage
+      #     command: yarn coverage
+      - save_cache:
+          name: Save Yarn Package Cache
+          key: yarn-packages-{{ checksum "yarn.lock" }}
+          paths:
+            - ~/.cache/yarn
+  # Backend tests (py2.7):
+  #   docker:
+  #     - image: circleci/python:2.7.14
+  #   steps:
+  #     - checkout
+  #     - run: <command>
