@@ -24,6 +24,7 @@ aliases:
       key: yarn-packages-{{ checksum "yarn.lock" }}
       paths:
         - ~/.cache/yarn
+        - node_modules
 
   - &pip_restore_cache
     restore_cache:
