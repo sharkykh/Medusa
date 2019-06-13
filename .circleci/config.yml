@@ -5,7 +5,8 @@ workflows:
     jobs:
       # TODO: "Check version" stage
       - Frontend
-      # - Backend tests (py2.7)
+      - Backend-py27
+      - Backend-py36
 aliases:
   - &yarn_restore_cache
     restore_cache:
@@ -26,6 +27,17 @@ aliases:
       paths:
         - ~/.cache/pip
       key: pip-packages-v1-{{ .Branch }}-{{ checksum "setup.py" }}-{{ checksum "requirements.txt" }}
+  - &backend_install
+    run:
+      name: install
+      command: |
+        pip install --user --upgrade pip
+        pip install --user --upgrade tox
+        echo 'export PATH="$HOME/.local/bin:$PATH"' >> $BASH_ENV
+  - &backend_test
+    run:
+      name: test
+      command: tox -v --recreate
 jobs:
   Frontend:
     docker:
@@ -52,9 +64,27 @@ jobs:
       #     name: Upload test coverage
       #     command: yarn coverage
       - *yarn_save_cache
-  # Backend tests (py2.7):
-  #   docker:
-  #     - image: circleci/python:2.7.14
-  #   steps:
-  #     - checkout
-  #     - run: <command>
+  Backend-py27:
+    docker:
+      - image: circleci/python:2.7.14
+    environment:
+      TOXENV: py27,lint
+    working_directory: ~/Medusa/
+    steps:
+      - checkout
+      - *pip_restore_cache
+      - *backend_install
+      - *backend_test
+      - *pip_save_cache
+  Backend-py36:
+    docker:
+      - image: circleci/python:3.6
+    environment:
+      TOXENV: py36
+    working_directory: ~/Medusa/
+    steps:
+      - checkout
+      - *pip_restore_cache
+      - *backend_install
+      - *backend_test
+      - *pip_save_cache
