@@ -6,6 +6,26 @@ workflows:
       # TODO: "Check version" stage
       - Frontend
       # - Backend tests (py2.7)
+aliases:
+  - &yarn_restore_cache
+    restore_cache:
+      name: Restore Yarn Package Cache
+      keys:
+        - yarn-packages-{{ checksum "yarn.lock" }}
+  - &yarn_save_cache
+    save_cache:
+      name: Save Yarn Package Cache
+      key: yarn-packages-{{ checksum "yarn.lock" }}
+      paths:
+        - ~/.cache/yarn
+  - &pip_restore_cache
+    restore_cache:
+      key: pip-packages-v1-{{ .Branch }}-{{ checksum "setup.py" }}-{{ checksum "requirements.txt" }}
+  - &pip_save_cache
+    save_cache:
+      paths:
+        - ~/.cache/pip
+      key: pip-packages-v1-{{ .Branch }}-{{ checksum "setup.py" }}-{{ checksum "requirements.txt" }}
 jobs:
   Frontend:
     docker:
@@ -14,10 +34,7 @@ jobs:
     steps:
       - checkout:
           path: ~/Medusa
-      - restore_cache:
-          name: Restore Yarn Package Cache
-          keys:
-            - yarn-packages-{{ checksum "yarn.lock" }}
+      - *yarn_restore_cache
       - run:
           name: yarn install
           command: yarn install --frozen-lockfile --ignore-scripts
@@ -34,11 +51,7 @@ jobs:
       # - run:
       #     name: Upload test coverage
       #     command: yarn coverage
-      - save_cache:
-          name: Save Yarn Package Cache
-          key: yarn-packages-{{ checksum "yarn.lock" }}
-          paths:
-            - ~/.cache/yarn
+      - *yarn_save_cache
   # Backend tests (py2.7):
   #   docker:
   #     - image: circleci/python:2.7.14
