@@ -1,12 +1,17 @@
 version: 2.1
+
+
 workflows:
   version: 2
+
   test:
     jobs:
       # TODO: "Check version" stage
       - Frontend
       - Backend-py27
       - Backend-py36
+
+
 aliases:
   - &yarn_restore_cache
     restore_cache:
@@ -19,6 +24,7 @@ aliases:
       key: yarn-packages-{{ checksum "yarn.lock" }}
       paths:
         - ~/.cache/yarn
+
   - &pip_restore_cache
     restore_cache:
       key: pip-packages-v1-{{ .Branch }}-{{ checksum "setup.py" }}-{{ checksum "requirements.txt" }}
@@ -27,6 +33,7 @@ aliases:
       paths:
         - ~/.cache/pip
       key: pip-packages-v1-{{ .Branch }}-{{ checksum "setup.py" }}-{{ checksum "requirements.txt" }}
+
   - &backend_install
     run:
       name: install
@@ -38,6 +45,8 @@ aliases:
     run:
       name: test
       command: tox -v --recreate
+
+
 jobs:
   Frontend:
     docker:
@@ -64,6 +73,7 @@ jobs:
       #     name: Upload test coverage
       #     command: yarn coverage
       - *yarn_save_cache
+
   Backend-py27:
     docker:
       - image: circleci/python:2.7.14
@@ -76,6 +86,7 @@ jobs:
       - *backend_install
       - *backend_test
       - *pip_save_cache
+
   Backend-py36:
     docker:
       - image: circleci/python:3.6
