@@ -106,11 +106,11 @@ jobs:
       - run:
           name: yarn install
           command: yarn install --frozen-lockfile --ignore-scripts
-      - run:
-          name: build-themes-check.sh
-          command: |
-            chmod +x ~/Medusa/.circleci/build-themes-check.sh
-            ~/Medusa/.circleci/build-themes-check.sh
+      # - run:
+      #     name: build-themes-check.sh
+      #     command: |
+      #       chmod +x ~/Medusa/.circleci/build-themes-check.sh
+      #       ~/Medusa/.circleci/build-themes-check.sh
       - run: yarn lint --format junit --output-file ./reports/eslint/results.xml
       - run: yarn lint-css
       - run:
