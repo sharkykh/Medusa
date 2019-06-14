@@ -38,26 +38,25 @@ aliases:
         - ~/.cache/yarn
         - node_modules
 
-  - &pip_restore_cache
-    restore_cache:
-      key: pip-packages-v1-{{ .Branch }}-{{ checksum "setup.py" }}-{{ checksum "requirements.txt" }}
-  - &pip_save_cache
-    save_cache:
-      paths:
-        - ~/.cache/pip
-      key: pip-packages-v1-{{ .Branch }}-{{ checksum "setup.py" }}-{{ checksum "requirements.txt" }}
-
-  - &backend_install
-    run:
-      name: install
-      command: |
-        pip install --user --upgrade pip
-        pip install --user --upgrade tox
-        echo 'export PATH="$HOME/.local/bin:$PATH"' >> $BASH_ENV
-  - &backend_test
-    run:
-      name: test
-      command: tox -v --recreate
+  - &backend_setup
+    working_directory: ~/Medusa/
+    steps:
+      - checkout
+      - restore_cache:
+          key: pip-packages-v1-{{ .Branch }}-{{ checksum "setup.py" }}-{{ checksum "requirements.txt" }}
+      - run:
+          name: install
+          command: |
+            pip install --user --upgrade pip
+            pip install --user --upgrade tox
+            echo 'export PATH="$HOME/.local/bin:$PATH"' >> $BASH_ENV
+      - run:
+          name: test
+          command: tox -v --recreate
+      - save_cache:
+          paths:
+            - ~/.cache/pip
+          key: pip-packages-v1-{{ .Branch }}-{{ checksum "setup.py" }}-{{ checksum "requirements.txt" }}
 
   - &dredd_setup
     working_directory: ~/Medusa/
@@ -121,26 +120,14 @@ jobs:
       - image: circleci/python:2.7.13
     environment:
       TOXENV: py27
-    working_directory: ~/Medusa/
-    steps:
-      - checkout
-      - *pip_restore_cache
-      - *backend_install
-      - *backend_test
-      - *pip_save_cache
+    <<: *backend_setup
 
   Backend-py36:
     docker:
       - image: circleci/python:3.6
     environment:
       TOXENV: py36,lint
-    working_directory: ~/Medusa/
-    steps:
-      - checkout
-      - *pip_restore_cache
-      - *backend_install
-      - *backend_test
-      - *pip_save_cache
+    <<: *backend_setup
 
   Dredd-py27:
     docker:
