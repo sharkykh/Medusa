@@ -57,6 +57,8 @@ aliases:
           paths:
             - ~/.cache/pip
           key: pip-packages-v1-{{ .Branch }}-{{ checksum "setup.py" }}-{{ checksum "requirements.txt" }}
+      - store_test_results:
+          path: reports
 
   - &dredd_setup
     working_directory: ~/Medusa/
