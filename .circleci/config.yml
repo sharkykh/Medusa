@@ -82,6 +82,8 @@ aliases:
           name: Dredd Hooks log
           command: /bin/cat ./dredd/hook.log
           when: on_fail
+      - store_test_results:
+          path: reports
 
 
 jobs:
