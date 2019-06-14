@@ -4,12 +4,18 @@ version: 2.1
 workflows:
   version: 2
 
-  test:
+  main_workflow:
     jobs:
-      # TODO: "Check version" stage
-      - Frontend
-      - Backend-py27
-      - Backend-py36
+      - check-version
+      - Frontend:
+          requires:
+            - check-version
+      - Backend-py27:
+          requires:
+            - check-version
+      - Backend-py36:
+          requires:
+            - check-version
 
 
 aliases:
@@ -49,6 +55,14 @@ aliases:
 
 
 jobs:
+  check-version:
+    docker:
+      - image: circleci/python:3.6
+    working_directory: ~/Medusa/
+    steps:
+      - checkout
+      - run: python .circleci/check_version.py
+
   Frontend:
     docker:
       - image: circleci/node:10.16.0
@@ -77,9 +91,9 @@ jobs:
 
   Backend-py27:
     docker:
-      - image: circleci/python:2.7.14
+      - image: circleci/python:2.7.13
     environment:
-      TOXENV: py27,lint
+      TOXENV: py27
     working_directory: ~/Medusa/
     steps:
       - checkout
@@ -92,7 +106,7 @@ jobs:
     docker:
       - image: circleci/python:3.6
     environment:
-      TOXENV: py36
+      TOXENV: py36,lint
     working_directory: ~/Medusa/
     steps:
       - checkout
