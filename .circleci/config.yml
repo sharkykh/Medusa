@@ -96,6 +96,8 @@ jobs:
   Frontend:
     docker:
       - image: circleci/node:10.16.0
+    environment:
+      JEST_JUNIT_OUTPUT: ./reports/jest/results.xml
     working_directory: ~/Medusa/themes-default/slim
     steps:
       - checkout:
@@ -109,15 +111,17 @@ jobs:
           command: |
             chmod +x ~/Medusa/.circleci/build-themes-check.sh
             ~/Medusa/.circleci/build-themes-check.sh
-      - run: yarn lint
+      - run: yarn lint --format junit --output-file ./reports/eslint/results.xml
       - run: yarn lint-css
       - run:
           name: Run tests
-          command: yarn test --maxWorkers=2
+          command: yarn test --maxWorkers=2 --ci --reporters=default --reporters=jest-junit
       # - run:
       #     name: Upload test coverage
       #     command: yarn coverage
       - *yarn_save_cache
+      - store_test_results:
+          path: reports
 
   Backend-py27:
     docker:

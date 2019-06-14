@@ -3,4 +3,5 @@
 .nyc_output
 coverage
 coverage.lcov
+reports
 dist
