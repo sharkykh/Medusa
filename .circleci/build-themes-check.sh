@@ -1,6 +1,11 @@
 #!/bin/bash
 set -e
 
+if [[ -z $CIRCLE_PULL_REQUEST ]]; then
+    echo "This is not a pull-request, skipping"
+    exit 0
+fi
+
 # This script expects to be run in: Medusa/themes-default/slim
 path_to_built_themes="../../themes/"
 
@@ -14,20 +19,16 @@ get_size () {
     du -sb $1 | cut -f1
 }
 
+# We need to get the PR's base/target branch, since CircleCI doesn't provide it
+merge_base=$(git merge-base origin/develop origin/master $CIRCLE_BRANCH)
+target_branch=$(git branch --points-at=$merge_base)
+
+echo "Target branch: $target_branch"
+run_verbose "git merge $target_branch --no-commit"
+
 # Determine if and how to build the Webpack bundle.
 build_cmd=""
 build_mode=""
-
-# $CIRCLE_BRANCH is always the current branch (on PRs this means the **topic** branch).
-# We need to get the PR's base/target branch, since CircleCI doesn't provide it
-if [[ -n ${CIRCLE_PR_NUMBER} ]]; then
-    merge_base=$(git merge-base origin/develop origin/master $CIRCLE_BRANCH)
-    target_branch=$(git branch --points-at=$merge_base)
-else
-    target_branch=$CIRCLE_BRANCH
-fi
-
-echo "Target branch: $target_branch"
 
 # Do not build on other branches because it will cause conflicts on pull requests,
 #   where push builds build for development and PR builds build for production.
