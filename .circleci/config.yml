@@ -16,6 +16,12 @@ workflows:
       - Backend-py36:
           requires:
             - check-version
+      - Dredd-py27:
+          requires:
+            - check-version
+      - Dredd-py36:
+          requires:
+            - check-version
 
 
 aliases:
@@ -52,6 +58,27 @@ aliases:
     run:
       name: test
       command: tox -v --recreate
+
+  - &dredd_setup
+    working_directory: ~/Medusa/
+    steps:
+      - checkout
+      - *yarn_restore_cache
+      - run:
+          name: install
+          command: |
+            pip install --user --upgrade pip
+            pip install --user dredd_hooks
+            pip install --user 'PyYAML>=5.1'
+            pip install --user six
+      - run:
+          name: test
+          command: yarn test-api
+      - *yarn_save_cache
+      - run:
+          name: Dredd Hooks log
+          command: /bin/cat ./dredd/hook.log
+          when: on_fail
 
 
 jobs:
@@ -114,3 +141,13 @@ jobs:
       - *backend_install
       - *backend_test
       - *pip_save_cache
+
+  Dredd-py27:
+    docker:
+      - image: nikolaik/python-nodejs:python2.7-nodejs10
+    <<: *dredd_setup
+
+  Dredd-py36:
+    docker:
+      - image: nikolaik/python-nodejs:python3.6-nodejs10
+    <<: *dredd_setup
