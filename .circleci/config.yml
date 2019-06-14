@@ -64,12 +64,15 @@ aliases:
       - checkout
       - *yarn_restore_cache
       - run:
-          name: install
+          name: install python deps
           command: |
             pip install --user --upgrade pip
             pip install --user dredd_hooks
             pip install --user 'PyYAML>=5.1'
             pip install --user six
+      - run:
+          name: yarn install
+          command: yarn install --frozen-lockfile --ignore-scripts
       - run:
           name: test
           command: yarn test-api
