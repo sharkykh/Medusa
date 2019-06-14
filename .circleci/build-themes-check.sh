@@ -20,13 +20,13 @@ get_size () {
 }
 
 # We need to get the PR's base/target branch, since CircleCI doesn't provide it
-merge_base_commit=$(git merge-base origin/develop origin/master $CIRCLE_BRANCH)
+merge_base_commit=$(git merge-base origin/develop origin/master $CIRCLE_BRANCH | tr -d ' ')
 if [[ -z $merge_base_commit ]]; then
     echo "merge_base_commit is empty!"
     exit 1
 fi
 
-target_branch=$(git branch --points-at=$merge_base_commit)
+target_branch=$(git branch --points-at=$merge_base_commit | tr -d ' ')
 if [[ -z $merge_base_commit ]]; then
     echo "Target branch is empty!"
     exit 1
