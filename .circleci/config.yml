@@ -47,8 +47,7 @@ aliases:
       - run:
           name: install
           command: |
-            pip install --user --upgrade pip
-            pip install --user --upgrade tox
+            pip install --user --upgrade pip tox
             echo 'export PATH="$HOME/.local/bin:$PATH"' >> $BASH_ENV
       - run:
           name: test
