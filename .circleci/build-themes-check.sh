@@ -27,7 +27,7 @@ if [[ -z $merge_base_commit ]]; then
 fi
 
 target_branch=$(git branch --points-at=$merge_base_commit | tr -d ' ')
-if [[ -z $merge_base_commit ]]; then
+if [[ -z $target_branch ]]; then
     echo "Target branch is empty!"
     exit 1
 fi
