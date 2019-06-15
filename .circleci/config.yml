@@ -6,7 +6,7 @@ workflows:
 
   main_workflow:
     jobs:
-      - check-version
+      - check-version:
           filters:
             branches:
               only:
