@@ -11,21 +11,11 @@ workflows:
             branches:
               only:
                 - /^release\/.+/
-      - Frontend:
-          requires:
-            - check-version
-      - Backend-py27:
-          requires:
-            - check-version
-      - Backend-py36:
-          requires:
-            - check-version
-      - Dredd-py27:
-          requires:
-            - check-version
-      - Dredd-py36:
-          requires:
-            - check-version
+      - Frontend
+      - Backend-py27
+      - Backend-py36
+      - Dredd-py27
+      - Dredd-py36
 
 
 aliases:
