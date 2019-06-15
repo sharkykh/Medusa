@@ -7,6 +7,10 @@ workflows:
   main_workflow:
     jobs:
       - check-version
+          filters:
+            branches:
+              only:
+                - /^release\/.+/
       - Frontend:
           requires:
             - check-version
