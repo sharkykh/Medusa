@@ -78,7 +78,7 @@ export const showSubMenu = vm => {
     /** @type {import('.').SubMenu} */
     let menu = [{
         title: 'Edit',
-        path: `home/editShow?indexername=${indexerName}&seriesid=${showId}`,
+        path: `home/editShow/${indexerName}${showId}`,
         icon: 'ui-icon ui-icon-pencil'
     }];
     if (!isBeingAdded && !isBeingUpdated) {

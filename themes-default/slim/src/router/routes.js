@@ -1,3 +1,4 @@
+import { legacyRedirectWrapper } from './helpers';
 import {
     configSubMenu,
     errorlogsSubMenu,
@@ -16,15 +17,26 @@ const homeRoutes = [
             topMenu: 'home'
         }
     },
-    {
-        path: '/home/editShow',
+    ...legacyRedirectWrapper({
         name: 'editShow',
+        path: '/home/editShow/:indexer([a-z]+)?:id(\\d+)?',
+        legacyRedirect: {
+            targetParams: {
+                indexer: route => route.query.indexername,
+                id: route => route.query.seriesid
+            }
+        },
+        props: $route => ({
+            indexer: $route.params.indexer,
+            id: Number($route.params.id)
+        }),
         meta: {
             topMenu: 'home',
-            subMenu: showSubMenu
+            subMenu: showSubMenu,
+            converted: true
         },
         component: () => import('../components/edit-show.vue')
-    },
+    }),
     {
         path: '/home/displayShow',
         name: 'show',

@@ -111,7 +111,8 @@ from traktor import (
 )
 
 
-@route('/home(/?.*)')
+@route(r'/home(/[^/]+)/.*')  # Compatiblity layer for VueRouter to permit extra path parameters
+@route(r'/home(/?.*)')
 class Home(WebRoot):
     def __init__(self, *args, **kwargs):
         super(Home, self).__init__(*args, **kwargs)

@@ -255,14 +255,16 @@ export default {
         /**
          * Show indexer
          */
-        showIndexer: {
-            type: String
+        indexer: {
+            type: String,
+            required: true
         },
         /**
          * Show id
          */
-        showId: {
-            type: Number
+        id: {
+            type: Number,
+            required: true
         }
     },
     data() {
@@ -281,12 +283,6 @@ export default {
             show: 'getCurrentShow',
             getStatus: 'getStatus'
         }),
-        indexer() {
-            return this.showIndexer || this.$route.query.indexername;
-        },
-        id() {
-            return this.showId || Number(this.$route.query.seriesid) || undefined;
-        },
         showLoaded() {
             return Boolean(this.show.id.slug);
         },
@@ -343,6 +339,10 @@ export default {
     },
     updated() {
         $('#config-components').tabs();
+    },
+    beforeRouteUpdate(to, from, next) {
+        this.loadShow(to.params);
+        next();
     },
     methods: {
         ...mapActions([
